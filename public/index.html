@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="PH × Zoll Digital Store — produk digital premium dan jasa photoshoot Minecraft."
+  >
+
+  <title>PH × Zoll Digital Store</title>
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
+
+  <header class="navbar glass">
+    <a href="/" class="brand">
+      <span class="brand-icon">PZ</span>
+      <span>
+        <strong>PH × Zoll</strong>
+        <small> DIGITAL STORE</small>
+      </span>
+    </a>
+
+    <nav>
+      <a href="#home">Beranda</a>
+      <a href="#products">Produk</a>
+      <a href="#minecraft">Minecraft</a>
+    </nav>
+
+    <a href="#products" class="button button-small">
+      Belanja Sekarang ↗
+    </a>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <div class="pill">
+          <span class="status-dot"></span>
+          YOUR DIGITAL EXPERIENCE
+        </div>
+
+        <h1>
+          Upgrade Your<br>
+          <span>Digital Lifestyle.</span>
+        </h1>
+
+        <p>
+          Temukan produk digital premium dan jasa kreatif
+          Minecraft dalam satu tempat.
+          Praktis, modern, dan nyaman.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#products" class="button">
+            Jelajahi Produk →
+          </a>
+
+          <a href="#minecraft" class="button button-outline">
+            Minecraft Studio
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div>
+            <strong>Digital</strong>
+            <span>Products</span>
+          </div>
+          <div>
+            <strong>Creative</strong>
+            <span>Minecraft Studio</span>
+          </div>
+          <div>
+            <strong>Secure</strong>
+            <span>Order System</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card glass">
+        <div class="orb"></div>
+
+        <div class="card-top">
+          <span>PH × ZOLL</span>
+          <span class="live-label">● ONLINE STORE</span>
+        </div>
+
+        <div class="floating-symbol">✦</div>
+
+        <div class="hero-card-content">
+          <span>YOUR NEXT LEVEL</span>
+          <h2>Premium<br>Digital Goods</h2>
+          <p>Discover. Choose. Enjoy.</p>
+        </div>
+
+        <div class="card-bottom">
+          <span>EST. 2026</span>
+          <span>DIGITAL EXPERIENCE</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="benefits">
+      <article class="glass benefit">
+        <span class="benefit-icon">✧</span>
+        <div>
+          <h3>Produk Digital</h3>
+          <p>Berbagai pilihan produk dan layanan digital.</p>
+        </div>
+      </article>
+
+      <article class="glass benefit">
+        <span class="benefit-icon">◈</span>
+        <div>
+          <h3>Pemesanan Praktis</h3>
+          <p>Informasi harga dan status pesanan jelas.</p>
+        </div>
+      </article>
+
+      <article class="glass benefit">
+        <span class="benefit-icon">◇</span>
+        <div>
+          <h3>Minecraft Studio</h3>
+          <p>Jasa kreatif untuk karakter Minecraft.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="section" id="products">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">OUR COLLECTION</span>
+          <h2>Explore <span>Products.</span></h2>
+          <p>Pilih produk sesuai kebutuhanmu.</p>
+        </div>
+      </div>
+
+      <div class="filters">
+        <button class="filter active" data-category="all">
+          Semua
+        </button>
+
+        <button class="filter" data-category="Aplikasi">
+          Aplikasi
+        </button>
+
+        <button class="filter" data-category="Musik">
+          Musik
+        </button>
+
+        <button class="filter" data-category="Jasa Minecraft">
+          Minecraft
+        </button>
+      </div>
+
+      <div class="product-grid" id="productGrid">
+        <div class="loading glass">Memuat produk...</div>
+      </div>
+    </section>
+
+    <section class="minecraft-section glass" id="minecraft">
+      <div class="minecraft-content">
+        <span class="eyebrow">MINECRAFT CREATIVE STUDIO</span>
+
+        <h2>Your Character.<br><span>Your Story.</span></h2>
+
+        <p>
+          Ubah karakter Minecraft menjadi karya visual yang
+          keren. Pilih konsep photoshoot sesuai gayamu.
+        </p>
+
+        <ul>
+          <li>✦ Photoshoot karakter Minecraft</li>
+          <li>✦ Pose dan konsep sesuai permintaan</li>
+          <li>✦ Cocok untuk profil dan konten</li>
+        </ul>
+
+        <a href="#products" class="button">
+          Lihat Paket Photoshoot →
+        </a>
+      </div>
+
+      <div class="minecraft-visual">
+        <div class="minecraft-frame">
+          <span>CREATIVE</span>
+          <div class="minecraft-cube">⬡</div>
+          <h3>MINECRAFT<br>PHOTO STUDIO</h3>
+          <p>CREATE YOUR OWN STYLE</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section order-section" id="order">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">CHECKOUT</span>
+          <h2>Place Your <span>Order.</span></h2>
+          <p>Isi informasi pesanan dengan benar.</p>
+        </div>
+      </div>
+
+      <form id="orderForm" class="glass order-form">
+        <label>
+          Nama pembeli
+          <input
+            type="text"
+            name="customerName"
+            maxlength="100"
+            required
+            placeholder="Nama kamu"
+          >
+        </label>
+
+        <label>
+          Email (opsional)
+          <input
+            type="email"
+            name="customerEmail"
+            maxlength="254"
+            placeholder="email@contoh.com"
+          >
+        </label>
+
+        <label>
+          Pilih produk
+          <select name="productId" id="productSelect" required>
+            <option value="">Pilih produk...</option>
+          </select>
+        </label>
+
+        <label>
+          Jumlah
+          <input
+            type="number"
+            name="quantity"
+            min="1"
+            max="10"
+            value="1"
+            required
+          >
+        </label>
+
+        <div id="orderMessage" class="message" hidden></div>
+
+        <button class="button submit-button" type="submit">
+          Buat Pesanan →
+        </button>
+
+        <p class="form-note">
+          Pesanan tidak dianggap lunas sebelum status pembayaran
+          dikonfirmasi oleh server.
+        </p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a href="/" class="brand">
+      <span class="brand-icon">PZ</span>
+      <span>
+        <strong>PH × Zoll</strong>
+        <small> DIGITAL STORE</small>
+      </span>
+    </a>
+
+    <p>© 2026 PH × Zoll Digital Store.</p>
+    <a href="/admin">Admin</a>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+  </html>
