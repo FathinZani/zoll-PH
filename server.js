@@ -31,7 +31,7 @@ app.use(express.urlencoded({
 app.use(session({
   store: new SQLiteStore({
     db: "sessions.sqlite",
-    dir: "."
+    dir: "/tmp" // Di Vercel, direktori sementara yang bisa ditulis hanya /tmp
   }),
   name: "phz.sid",
   secret: process.env.SESSION_SECRET,
@@ -624,6 +624,13 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`PH × Zoll Digital Store berjalan di port ${PORT}`);
-});
+// Jalankan app.listen HANYA jika dijalankan secara lokal (bukan di Vercel)
+if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`PH × Zoll Digital Store berjalan di port ${PORT}`);
+  });
+}
+
+// Ekspor aplikasi agar bisa dibaca oleh Vercel Serverless Functions
+module.exports = app;
+                        
