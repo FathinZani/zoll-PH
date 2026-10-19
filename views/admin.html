@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>PH × Zoll — Admin Dashboard</title>
+
+  <link rel="stylesheet" href="/style.css">
+
+  <style>
+    body { min-height: 100vh; }
+
+    .admin-wrap {
+      max-width: 1100px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+
+    .admin-panel {
+      padding: 25px;
+      border-radius: 20px;
+      margin-bottom: 25px;
+    }
+
+    .admin-panel h2 {
+      font-size: 20px;
+    }
+
+    .admin-form {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-form input,
+    .admin-form select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      background: #101321;
+      color: white;
+      border: 1px solid var(--border);
+    }
+
+    .admin-form button {
+      grid-column: 1 / -1;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 12px;
+      min-width: 650px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 13px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th { color: #b5a0ff; }
+
+    .admin-message {
+      color: #c7c9dc;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 600px) {
+      .admin-form { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="navbar glass">
+    <a href="/" class="brand">
+      <span class="brand-icon">PZ</span>
+      <span>
+        <strong>PH × Zoll</strong>
+        <small>ADMIN DASHBOARD</small>
+      </span>
+    </a>
+
+    <a href="/" class="button button-small">Lihat Toko ↗</a>
+  </header>
+
+  <main class="admin-wrap">
+    <section class="admin-panel glass" id="loginPanel">
+      <h1>Admin Login</h1>
+      <p class="admin-message">
+        Masuk untuk mengelola toko.
+      </p>
+
+      <form id="loginForm" class="admin-form">
+        <input
+          name="username"
+          autocomplete="username"
+          placeholder="Username"
+          required
+        >
+
+        <input
+          type="password"
+          name="password"
+          autocomplete="current-password"
+          placeholder="Password"
+          required
+        >
+
+        <button class="button" type="submit">
+          Login
+        </button>
+      </form>
+
+      <p id="loginMessage" class="admin-message"></p>
+    </section>
+
+    <div id="dashboard" class="hidden">
+      <section class="admin-panel glass">
+        <h2>Tambah Produk</h2>
+
+        <form id="productForm" class="admin-form">
+          <input name="name" placeholder="Nama produk" required>
+
+          <select name="category" required>
+            <option value="Aplikasi">Aplikasi</option>
+            <option value="Musik">Musik</option>
+            <option value="Jasa Minecraft">Jasa Minecraft</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+
+          <input
+            name="price"
+            type="number"
+            min="0"
+            placeholder="Harga (rupiah)"
+            required
+          >
+
+          <input
+            name="stock"
+            type="number"
+            min="0"
+            placeholder="Stok"
+            required
+          >
+
+          <input
+            name="image"
+            type="url"
+            placeholder="URL gambar HTTPS (opsional)"
+          >
+
+          <input
+            name="description"
+            placeholder="Deskripsi produk"
+          >
+
+          <button class="button" type="submit">
+            Tambahkan Produk
+          </button>
+        </form>
+
+        <p id="productMessage" class="admin-message"></p>
+      </section>
+
+      <section class="admin-panel glass">
+        <h2>Kelola Produk</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Produk</th>
+                <th>Harga</th>
+                <th>Stok</th>
+                <th>Aktif</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+
+            <tbody id="productsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-panel glass">
+        <h2>Pesanan Terbaru</h2>
+
+        <button id="refreshOrders" class="button">
+          Muat Ulang Pesanan
+        </button>
+
+        <div class="table-wrap" style="margin-top:20px">
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Pembeli</th>
+                <th>Produk</th>
+                <th>Total</th>
+                <th>Pembayaran</th>
+                <th>Pengiriman</th>
+              </tr>
+            </thead>
+
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <button id="logoutButton" class="button button-outline">
+        Logout
+      </button>
+    </div>
+  </main>
+
+  <script>
+    const loginPanel = document.getElementById("loginPanel");
+    const dashboard = document.getElementById("dashboard");
+
+    const loginMessage = document.getElementById("loginMessage");
+    const productMessage = document.getElementById("productMessage");
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, c => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[c]);
+    }
+
+    function rupiah(value) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    async function api(url, options = {}) {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          ...(options.body ? {
+            "Content-Type": "application/json"
+          } : {}),
+          ...options.headers
+        }
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error || "Permintaan gagal.");
+      }
+
+      return data;
+    }
+
+    async function checkLogin() {
+      try {
+        await loadProducts();
+        loginPanel.classList.add("hidden");
+        dashboard.classList.remove("hidden");
+        await loadOrders();
+      } catch {
+        loginPanel.classList.remove("hidden");
+        dashboard.classList.add("hidden");
+      }
+    }
+
+    document.getElementById("loginForm")
+      .addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const form = new FormData(event.target);
+
+        try {
+          await api("/api/admin/login", {
+            method: "POST",
+            body: JSON.stringify({
+              username: form.get("username"),
+              password: form.get("password")
+            })
+          });
+
+          loginMessage.textContent = "Login berhasil.";
+          await checkLogin();
+        } catch (error) {
+          loginMessage.textContent = error.message;
+        }
+      });
+
+    document.getElementById("productForm")
+      .addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const form = new FormData(event.target);
+
+        try {
+          await api("/api/admin/products", {
+            method: "POST",
+            body: JSON.stringify({
+              name: form.get("name"),
+              category: form.get("category"),
+              description: form.get("description"),
+              price: Number(form.get("price")),
+              stock: Number(form.get("stock")),
+              image: form.get("image")
+            })
+          });
+
+          productMessage.textContent = "Produk berhasil ditambahkan.";
+          event.target.reset();
+          await loadProducts();
+        } catch (error) {
+          productMessage.textContent = error.message;
+        }
+      });
+
+    async function loadProducts() {
+      const products = await api("/api/products");
+
+      document.getElementById("productsBody").innerHTML =
+        products.map(product => `
+          <tr>
+            <td>${product.id}</td>
+            <td>${escapeHTML(product.name)}</td>
+            <td>${rupiah(product.price)}</td>
+            <td>${product.stock}</td>
+            <td>${product.active ? "Ya" : "Tidak"}</td>
+            <td>
+              <button
+                class="button"
+                data-edit="${product.id}"
+                data-price="${product.price}"
+                data-stock="${product.stock}"
+                data-active="${product.active ? 1 : 0}"
+              >
+                Edit
+              </button>
+            </td>
+          </tr>
+        `).join("");
+
+      return products;
+    }
+
+    document.getElementById("productsBody")
+      .addEventListener("click", async event => {
+        const button = event.target.closest("[data-edit]");
+
+        if (!button) return;
+
+        const price = prompt(
+          "Harga baru:",
+          button.dataset.price
+        );
+
+        if (price === null) return;
+
+        const stock = prompt(
+          "Stok baru:",
+          button.dataset.stock
+        );
+
+        if (stock === null) return;
+
+        const active = confirm(
+          "Pilih OK untuk mengaktifkan produk. " +
+          "Pilih Cancel untuk menonaktifkan."
+        ) ? 1 : 0;
+
+        try {
+          await api("/api/admin/products/" + button.dataset.edit, {
+            method: "PATCH",
+            body: JSON.stringify({
+              price: Number(price),
+              stock: Number(stock),
+              active
+            })
+          });
+
+          productMessage.textContent = "Produk diperbarui.";
+          await loadProducts();
+        } catch (error) {
+          productMessage.textContent = error.message;
+        }
+      });
+
+    async function loadOrders() {
+      const orders = await api("/api/admin/orders");
+
+      document.getElementById("ordersBody").innerHTML =
+        orders.map(order => `
+          <tr>
+            <td>${escapeHTML(order.invoice)}</td>
+            <td>${escapeHTML(order.customer_name)}</td>
+            <td>${escapeHTML(order.product_name)}</td>
+            <td>${rupiah(order.total)}</td>
+            <td>${escapeHTML(order.payment_status)}</td>
+            <td>${escapeHTML(order.fulfillment_status)}</td>
+          </tr>
+        `).join("");
+    }
+
+    document.getElementById("refreshOrders")
+      .addEventListener("click", async () => {
+        try {
+          await loadOrders();
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+
+    document.getElementById("logoutButton")
+      .addEventListener("click", async () => {
+        try {
+          await api("/api/admin/logout", {
+            method: "POST"
+          });
+
+          location.reload();
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+
+    checkLogin();
+  </script>
+</body>
+  </html>
